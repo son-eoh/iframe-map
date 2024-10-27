@@ -17,9 +17,27 @@
             margin: auto;
         }
 
+        /* highlight with color */
+        #position {
+            position: absolute;
+            top: -13px;
+            left: 50px;
+            z-index: 1000;
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 5px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            font-size: x-large;
+        }
+
+        #textPosition {
+            color: 'white';
+        }
+
         #map {
             width: 100%;
-            height: 80vh;
+            height: 100vh;
         }
     </style>
     <!-- Include Leaflet CSS and JS -->
@@ -31,14 +49,14 @@
 
 <body>
     <div class="container">
-        <p>Position: <span id="textPosition">loading...</span></p>
+        <p id="position">Position: <span id="textPosition">...</span></p>
         <div id="map"></div>
     </div>
 
     <script src="https://www.unpkg.com/@eohjsc/era-widget@1.1.3/src/index.js"></script>
     <script>
         let map, lastPosition;
-        const defaultPosition = [10.844710, 106.745869]; // Target location as [lat, lng] for Leaflet
+        const defaultPosition = [10.848684, 106.748129]; // Target location as [lat, lng] for Leaflet
         const positions = []; // Array to store all positions
         const markers = []; // Array to store markers for all positions
         const textPosition = document.getElementById('textPosition');
@@ -46,7 +64,7 @@
 
         // Initialize map with OpenStreetMap using Leaflet
         function initMap() {
-            map = L.map('map').setView(defaultPosition, 15); // Set default view and zoom level
+            map = L.map('map').setView(defaultPosition, 16); // Set default view and zoom level
 
             // Set up OSM tile layer
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -55,7 +73,7 @@
             }).addTo(map);
 
             // Add initial marker
-            addMarker(defaultPosition);
+            // addMarker(defaultPosition);
             lastPosition = defaultPosition;
             positions.push(defaultPosition); // Add default position to the array
         }
@@ -76,8 +94,8 @@
             if (lastPosition[0] !== lat || lastPosition[1] !== lng) {
                 positions.push(newPosition); // Store the new position
                 addMarker(newPosition); // Add a new marker for the new position
-                map.panTo(newPosition); // Center map on the new position
-                textPosition.textContent = `Latitude: ${lat}, Longitude: ${lng}`;
+                // map.panTo(newPosition); // Center map on the new position
+                textPosition.textContent = `${lat}, ${lng}`;
                 lastPosition = newPosition; // Update last position
             }
         }
