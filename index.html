@@ -124,6 +124,8 @@
                     position2Config = configuration.realtime_configs[1];
                 },
                 onValues: (values) => {
+                    console.log('values', values);
+
                     const position1 = values[position1Config.id];
                     if (position1) {
                         let positionData = JSON.parse(position1.value);
