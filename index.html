@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 100%;
+            height: 100%;
+        }
+
+        #map {
+            width: 100%;
+            height: 80vh;
+        }
+    </style>
+    <!-- Include jQuery library -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Include Google Maps JavaScript API (replace `YOUR_API_KEY` with your actual API key) -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
+</head>
+
+<body>
+    <div class="container">
+        <p>Current Position: <span id="location">loading...</span></p>
+        <div id="map"></div>
+    </div>
+
+    <script>
+        let map, lastPosition;
+        const defaultPosition = { lat: 10.844710, lng: 106.745869 }; // Target location
+        const positions = []; // Array to store all positions
+        const markers = []; // Array to store markers for all positions
+
+        function initMap() {
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: defaultPosition,
+                zoom: 15, // Zoom level for closer view
+            });
+
+            // Initial marker
+            addMarker(defaultPosition);
+            lastPosition = defaultPosition;
+            positions.push(defaultPosition); // Add default position to the array
+        }
+
+        // Function to add a marker at a given position
+        function addMarker(position) {
+            const marker = new google.maps.Marker({
+                position: position,
+                map: map,
+                title: "Tracked Position"
+            });
+            markers.push(marker); // Store marker in the markers array
+        }
+
+        // Function to update marker position and store it
+        function updatePosition(lat, lng) {
+            const newPosition = { lat: lat, lng: lng };
+
+            // Check if the new position differs from the last one
+            if (lastPosition.lat !== lat || lastPosition.lng !== lng) {
+                positions.push(newPosition); // Store the new position
+                addMarker(newPosition); // Add a new marker for the new position
+                // map.panTo(newPosition); // Center map on the new position
+                $("#location").text(`Latitude: ${lat}, Longitude: ${lng}`);
+                lastPosition = newPosition; // Update last position
+            }
+        }
+
+        $(document).ready(function () {
+            initMap();
+
+            // Example of updating the position every 3 seconds within a smaller range around target location
+            setInterval(function () {
+                // Generate new coordinates within a smaller range around defaultPosition
+                const newLat = defaultPosition.lat + (Math.random() - 0.5) * 0.002;
+                const newLng = defaultPosition.lng + (Math.random() - 0.5) * 0.002;
+                updatePosition(newLat, newLng);
+            }, 3000);
+        });
+    </script>
+</body>
+
+</html>
