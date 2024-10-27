@@ -58,43 +58,37 @@
         let map, lastPosition;
         const defaultPosition = [10.848684, 106.748129]; // Target location as [lat, lng] for Leaflet
         const startPosition = [10.843467, 106.745122]; // Start location
-        const positions = []; // Array to store all positions
-        const markers = []; // Array to store markers for all positions
+        const positions = [];
+        const markers = [];
         const textPosition = document.getElementById('textPosition');
         let positionConfig = null;
 
-        // Initialize map with OpenStreetMap using Leaflet
         function initMap() {
             map = L.map('map').setView(defaultPosition, 15); // Set default view and zoom level
 
-            // Set up OSM tile layer
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
 
-            // Add initial marker
             addMarker(startPosition);
             lastPosition = defaultPosition;
-            positions.push(defaultPosition); // Add default position to the array
+            positions.push(defaultPosition);
         }
 
-        // Function to add a marker at a given position
         function addMarker(position) {
             const marker = L.marker(position).addTo(map)
                 .bindPopup('Robot')
                 .openPopup();
-            markers.push(marker); // Store marker in the markers array
+            markers.push(marker);
         }
 
-        // Function to update marker position and store it
         function updatePosition(lat, lng) {
             const newPosition = [lat, lng];
 
-            // Check if the new position differs from the last one
             if (lastPosition[0] !== lat || lastPosition[1] !== lng) {
-                positions.push(newPosition); // Store the new position
-                addMarker(newPosition); // Add a new marker for the new position
+                positions.push(newPosition);
+                addMarker(newPosition);
                 // map.panTo(newPosition); // Center map on the new position
                 textPosition.textContent = `${lat}, ${lng}`;
                 lastPosition = newPosition; // Update last position
@@ -104,7 +98,6 @@
         $(document).ready(function () {
             initMap();
 
-            // Initialize EraWidget
             const eraWidget = new EraWidget();
             eraWidget.init({
                 needRealtimeConfigs: true,
@@ -125,7 +118,7 @@
                         let positionData = JSON.parse(positionERaValue);
                         const { lat, lng } = positionData; // { lat: 10.844710, lng: 106.745869 }
                         if (lat && lng) {
-                            updatePosition(lat, lng); // Update the map position
+                            updatePosition(lat, lng);
                         }
                     }
                 },
