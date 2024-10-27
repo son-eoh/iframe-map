@@ -66,6 +66,13 @@
         let lastPosition1 = null;
         let lastPosition2 = null;
 
+        const startIcon = L.icon({
+            iconUrl: './start_green.png',
+            iconSize: [40, 40],
+            iconAnchor: [22, 37],
+            popupAnchor: [-3, -37],
+        });
+
         const position1Icon = L.icon({
             iconUrl: './warning.png',
             iconSize: [38, 38],
@@ -89,14 +96,18 @@
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
 
-            addMarker(startPosition); // Add initial marker
+            addMarker(startPosition, startIcon, false);
         }
 
         // Function to add a marker at a given position with a specified icon
-        function addMarker(position, icon) {
+        function addMarker(position, icon, open = true) {
+            if (open) {
+                const marker = L.marker(position, icon ? { icon: icon } : {}).addTo(map)
+                    .bindPopup('Position')
+                    .openPopup();
+                return;
+            }
             const marker = L.marker(position, icon ? { icon: icon } : {}).addTo(map)
-                .bindPopup('Position')
-                .openPopup();
         }
 
         // Function to update position on the map if the coordinates change
