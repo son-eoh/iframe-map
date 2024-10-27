@@ -61,7 +61,16 @@
         const positions = [];
         const markers = [];
         const textPosition = document.getElementById('textPosition');
-        let positionConfig = null;
+        let position1Config = null;
+        let position2Config = null;
+
+        // Custom icon for position2 with a different color
+        const position2Icon = L.icon({
+            iconUrl: './barrier.png',
+            iconSize: [38, 38],
+            iconAnchor: [22, 37],
+            popupAnchor: [-3, -37],
+        });
 
         function initMap() {
             map = L.map('map').setView(defaultPosition, 15); // Set default view and zoom level
@@ -71,25 +80,26 @@
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
 
+            // Add initial marker with default icon
             addMarker(startPosition);
             lastPosition = defaultPosition;
             positions.push(defaultPosition);
         }
 
-        function addMarker(position) {
-            const marker = L.marker(position).addTo(map)
+        // Function to add a marker at a given position with a specified icon
+        function addMarker(position, icon) {
+            const marker = L.marker(position, icon && { icon: icon }).addTo(map)
                 .bindPopup('Robot')
                 .openPopup();
             markers.push(marker);
         }
 
-        function updatePosition(lat, lng) {
+        function updatePosition(lat, lng, icon) {
             const newPosition = [lat, lng];
 
             if (lastPosition[0] !== lat || lastPosition[1] !== lng) {
                 positions.push(newPosition);
-                addMarker(newPosition);
-                // map.panTo(newPosition); // Center map on the new position
+                addMarker(newPosition, icon); // Add marker with specified icon
                 textPosition.textContent = `${lat}, ${lng}`;
                 lastPosition = newPosition; // Update last position
             }
@@ -110,15 +120,25 @@
                 minHistoryConfigsCount: 0,
                 minActionsCount: 0,
                 onConfiguration: (configuration) => {
-                    positionConfig = configuration.realtime_configs[0];
+                    position1Config = configuration.realtime_configs[0];
+                    position2Config = configuration.realtime_configs[1];
                 },
                 onValues: (values) => {
-                    if (positionConfig && values[positionConfig.id]) {
-                        let positionERaValue = values[positionConfig.id].value;
-                        let positionData = JSON.parse(positionERaValue);
+                    const position1 = values[position1Config.id];
+                    if (position1) {
+                        let positionData = JSON.parse(position1.value);
                         const { lat, lng } = positionData; // { lat: 10.844710, lng: 106.745869 }
                         if (lat && lng) {
-                            updatePosition(lat, lng);
+                            updatePosition(lat, lng, null);
+                        }
+                    }
+
+                    const position2 = values[position2Config.id];
+                    if (position2) {
+                        let positionData = JSON.parse(position2.value);
+                        const { lat, lng } = positionData; // { lat: 10.844710, lng: 106.745869 }
+                        if (lat && lng) {
+                            updatePosition(lat, lng, position2Icon);
                         }
                     }
                 },
