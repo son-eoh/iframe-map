@@ -103,7 +103,7 @@
         function addMarker(position, icon, open = true) {
             if (open) {
                 const marker = L.marker(position, icon ? { icon: icon } : {}).addTo(map)
-                    .bindPopup('Position')
+                    .bindPopup('Here')
                     .openPopup();
                 return;
             }
