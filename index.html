@@ -125,8 +125,9 @@
                 },
                 onValues: (values) => {
                     if (positionConfig && values[positionConfig.id]) {
-                        let jsonPositionValue = values[positionConfig.id].value;
-                        const { lat, lng } = jsonPositionValue; // { lat: 10.844710, lng: 106.745869 }
+                        let positionERaValue = values[positionConfig.id].value;
+                        let positionData = JSON.parse(positionERaValue);
+                        const { lat, lng } = positionData; // { lat: 10.844710, lng: 106.745869 }
                         if (lat && lng) {
                             updatePosition(lat, lng); // Update the map position
                         }
