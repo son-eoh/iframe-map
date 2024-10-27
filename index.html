@@ -57,6 +57,7 @@
     <script>
         let map, lastPosition;
         const defaultPosition = [10.848684, 106.748129]; // Target location as [lat, lng] for Leaflet
+        const startPosition = [10.843467, 106.745122]; // Start location
         const positions = []; // Array to store all positions
         const markers = []; // Array to store markers for all positions
         const textPosition = document.getElementById('textPosition');
@@ -73,7 +74,7 @@
             }).addTo(map);
 
             // Add initial marker
-            // addMarker(defaultPosition);
+            addMarker(startPosition);
             lastPosition = defaultPosition;
             positions.push(defaultPosition); // Add default position to the array
         }
@@ -102,11 +103,6 @@
 
         $(document).ready(function () {
             initMap();
-
-            setTimeout(() => {
-                // Update the map position after 5 seconds
-                updatePosition(10.845, 106.746);
-            }, 5000);
 
             // Initialize EraWidget
             const eraWidget = new EraWidget();
