@@ -17,7 +17,6 @@
             margin: auto;
         }
 
-        /* highlight with color */
         #position {
             position: absolute;
             top: -13px;
@@ -29,6 +28,7 @@
             border-radius: 5px;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
             font-size: x-large;
+            font-family: Arial, sans-serif;
         }
 
         #textPosition {
@@ -65,7 +65,7 @@
 
         // Initialize map with OpenStreetMap using Leaflet
         function initMap() {
-            map = L.map('map').setView(defaultPosition, 16); // Set default view and zoom level
+            map = L.map('map').setView(defaultPosition, 15); // Set default view and zoom level
 
             // Set up OSM tile layer
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -82,7 +82,7 @@
         // Function to add a marker at a given position
         function addMarker(position) {
             const marker = L.marker(position).addTo(map)
-                .bindPopup('Tracked Position')
+                .bindPopup('Robot')
                 .openPopup();
             markers.push(marker); // Store marker in the markers array
         }
