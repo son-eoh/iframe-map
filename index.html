@@ -66,6 +66,13 @@
         let lastPosition1 = null;
         let lastPosition2 = null;
 
+        const position1Icon = L.icon({
+            iconUrl: './traffic-barrier.png',
+            iconSize: [38, 38],
+            iconAnchor: [22, 37],
+            popupAnchor: [-3, -37],
+        });
+
         // Custom icon for position2
         const position2Icon = L.icon({
             iconUrl: './barrier.png',
@@ -95,7 +102,7 @@
         // Function to update position on the map if the coordinates change
         function updatePosition(lat, lng, icon) {
             addMarker([lat, lng], icon);
-            textPosition.textContent = `Latitude: ${lat}, Longitude: ${lng}`;
+            textPosition.textContent = `${lat}, ${lng}`;
         }
 
         $(document).ready(function () {
@@ -117,6 +124,7 @@
                     position2Config = configuration.realtime_configs[1];
                 },
                 onValues: (values) => {
+                    console.log('xxx', values);
                     const position1 = values[position1Config.id];
                     const position2 = values[position2Config.id];
 
@@ -124,7 +132,7 @@
                         let positionData1 = JSON.parse(position1.value);
                         const { lat: lat1, lng: lng1 } = positionData1;
                         if (lat1 && lng1 && (!lastPosition1 || lastPosition1.lat !== lat1 || lastPosition1.lng !== lng1)) {
-                            updatePosition(lat1, lng1, null); // Default icon for position1
+                            updatePosition(lat1, lng1, position1Icon); // Default icon for position1
                             lastPosition1 = { lat: lat1, lng: lng1 };
                         }
                     }
