@@ -99,7 +99,6 @@
             addMarker(startPosition, startIcon, false);
         }
 
-        // Function to add a marker at a given position with a specified icon
         function addMarker(position, icon, open = true) {
             if (open) {
                 const marker = L.marker(position, icon ? { icon: icon } : {}).addTo(map)
@@ -110,7 +109,6 @@
             const marker = L.marker(position, icon ? { icon: icon } : {}).addTo(map)
         }
 
-        // Function to update position on the map if the coordinates change
         function updatePosition(lat, lng, icon) {
             addMarker([lat, lng], icon);
             textPosition.textContent = `${lat}, ${lng}`;
@@ -141,18 +139,18 @@
 
                     if (position1) {
                         let positionData1 = JSON.parse(position1.value);
-                        const { lat: lat1, lng: lng1 } = positionData1;
+                        const [lat1, lng1] = positionData1;
                         if (lat1 && lng1 && (!lastPosition1 || lastPosition1.lat !== lat1 || lastPosition1.lng !== lng1)) {
-                            updatePosition(lat1, lng1, position1Icon); // Default icon for position1
+                            updatePosition(lat1, lng1, position1Icon);
                             lastPosition1 = { lat: lat1, lng: lng1 };
                         }
                     }
 
                     if (position2) {
                         let positionData2 = JSON.parse(position2.value);
-                        const { lat: lat2, lng: lng2 } = positionData2;
+                        const [lat2, lng2] = positionData2;
                         if (lat2 && lng2 && (!lastPosition2 || lastPosition2.lat !== lat2 || lastPosition2.lng !== lng2)) {
-                            updatePosition(lat2, lng2, position2Icon); // Custom icon for position2
+                            updatePosition(lat2, lng2, position2Icon);
                             lastPosition2 = { lat: lat2, lng: lng2 };
                         }
                     }
