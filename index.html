@@ -60,6 +60,9 @@
         const textPosition = document.getElementById('textPosition');
         let position1Config = null;
         let position2Config = null;
+        let position3Config = null;
+
+        let positionMarker = null;
 
         // Track last known positions to detect changes
         let lastPosition1 = null;
@@ -79,9 +82,15 @@
             popupAnchor: [-3, -37],
         });
 
-        // Custom icon for position2
         const position2Icon = L.icon({
             iconUrl: './barrier.png',
+            iconSize: [30, 30],
+            iconAnchor: [22, 37],
+            popupAnchor: [-3, -37],
+        });
+
+        const position3Icon = L.icon({
+            iconUrl: './train.png',
             iconSize: [30, 30],
             iconAnchor: [22, 37],
             popupAnchor: [-3, -37],
@@ -95,22 +104,22 @@
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
 
-            addMarker(startPosition, startIcon, false);
+            addMarker(startPosition, startIcon);
+            positionMarker = addMarker(startPosition, position3Icon);
         }
 
-        function addMarker(position, icon, open = true) {
-            if (open) {
-                const marker = L.marker(position, icon ? { icon: icon } : {}).addTo(map)
-                    .bindPopup('Here')
-                    .openPopup();
-                return;
+        function addMarker(position, icon) {
+            return L.marker(position, icon ? { icon: icon } : {}).addTo(map)
+        }
+
+        function updatePosition(lat, lng, icon, marker) {
+            if (marker) {
+                marker.setLatLng([lat, lng]);
+            } else {
+                marker = addMarker([lat, lng], icon);
             }
-            const marker = L.marker(position, icon ? { icon: icon } : {}).addTo(map)
-        }
-
-        function updatePosition(lat, lng, icon) {
-            addMarker([lat, lng], icon);
             textPosition.textContent = `${lat}, ${lng}`;
+            return marker;
         }
 
         $(document).ready(function () {
@@ -135,6 +144,7 @@
                     console.log('xxx', values);
                     const position1 = values[position1Config.id];
                     const position2 = values[position2Config.id];
+                    const position3 = values[position3Config.id];
 
                     if (position1) {
                         let positionData1 = JSON.parse(position1.value);
@@ -151,6 +161,14 @@
                         if (lat2 && lng2 && (!lastPosition2 || lastPosition2.lat !== lat2 || lastPosition2.lng !== lng2)) {
                             updatePosition(lat2, lng2, position2Icon);
                             lastPosition2 = { lat: lat2, lng: lng2 };
+                        }
+                    }
+
+                    if (position3) {
+                        let positionData3 = JSON.parse(position3.value);
+                        const [lat3, lng3] = positionData3;
+                        if (lat3 && lng3) {
+                            positionMarker = updatePosition(lat3, lng3, position3Icon, positionMarker);
                         }
                     }
                 },
